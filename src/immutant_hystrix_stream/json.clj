@@ -4,6 +4,7 @@
   (:import [com.netflix.hystrix HystrixCommandKey HystrixCircuitBreaker$Factory]
            [com.netflix.hystrix.util HystrixRollingNumberEvent]))
 
+;; encoders
 (add-encoder com.netflix.hystrix.HystrixCommandMetrics
              (fn [c jg]
                (let [key (.getCommandKey c)
@@ -21,6 +22,7 @@
                  (if (= circuit-breaker nil)
                    (.writeBooleanField jg "isCircuitBreakerOpen" false)
                    (.writeBooleanField jg "isCircuitBreakerOpen" (.isOpen circuit-breaker)))
+
                  (doto jg                 
                    (.writeNumberField "errorPercentage" (.getErrorPercentage health-counts))
                    (.writeNumberField "errorCount" (.getErrorCount health-counts))
@@ -158,6 +160,48 @@
                    
                    (.writeEndObject)))))
 
+(add-encoder com.netflix.hystrix.HystrixThreadPoolMetrics
+             (fn [t jg]
+               (let [key (.getThreadPoolKey t)]
+                 (doto jg
+                   (.writeStartObject)
+                   (.writeStringField "type" "HystrixThreadPool")
+                   (.writeStringField "name" (.name key))
+                   (.writeNumberField "currentTime" (System/currentTimeMillis))
+                   (.writeNumberField "currentActiveCount" (-> t
+                                                               (.getCurrentActiveCount)
+                                                               (.intValue)))
+                   (.writeNumberField "currentCompletedTaskCount"  (-> t
+                                                                       (.getCurrentCompletedTaskCount)
+                                                                       (.longValue) ))
+                   (.writeNumberField "currentCorePoolSize"  (-> t
+                                                                 (.getCurrentCorePoolSize)
+                                                                 (.intValue)))
+                   (.writeNumberField "currentLargestPoolSize" (-> t (.getCurrentLargestPoolSize) (.intValue)))
+                   (.writeNumberField "currentMaximumPoolSize" (-> t (.getCurrentMaximumPoolSize) (.intValue)))
+                   (.writeNumberField "currentPoolSize" (-> t (.getCurrentPoolSize) (.intValue)))
+                   (.writeNumberField "currentQueueSize" (-> t (.getCurrentQueueSize) (.intValue)))
+                   (.writeNumberField "currentTaskCount" (-> t (.getCurrentTaskCount) (.longValue)))
+                   (.writeNumberField "rollingCountThreadsExecuted"
+                                      (.getRollingCount t (HystrixRollingNumberEvent/THREAD_EXECUTION)))
+                   (.writeNumberField "rollingMaxActiveThreads" (.getRollingMaxActiveThreads t))
+                   (.writeNumberField "rollingCountCommandRejections"
+                                      (.getRollingCount t (HystrixRollingNumberEvent/THREAD_POOL_REJECTED)))
+
+                   (.writeNumberField "propertyValue_queueSizeRejectionThreshold"
+                                      (-> t
+                                          (.getProperties)
+                                          (.queueSizeRejectionThreshold)
+                                          (.get)))
+                   (.writeNumberField "propertyValue_metricsRollingStatisticalWindowInMilliseconds"
+                                      (-> t
+                                          (.getProperties)
+                                          (.metricsRollingStatisticalWindowInMilliseconds)
+                                          (.get)))
+                   (.writeNumberField "reportingHosts"  1)
+                   (.writeEndObject)))))
+
+;; convenience functions
 (defn cmd->json
   "Convert a Hystrix command object to it's JSON representation"
   [cmd]
