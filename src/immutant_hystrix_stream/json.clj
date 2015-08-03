@@ -1,4 +1,5 @@
 (ns immutant-hystrix-stream.json
+  (:require [immutant-hystrix-stream.metrics :as metrics])
   (:require [cheshire.core :refer :all]
             [cheshire.generate :refer [add-encoder encode-str remove-encoder]])
   (:import [com.netflix.hystrix HystrixCommandKey HystrixCircuitBreaker$Factory]
@@ -201,8 +202,68 @@
                    (.writeNumberField "reportingHosts"  1)
                    (.writeEndObject)))))
 
+(add-encoder com.netflix.hystrix.HystrixCollapserMetrics
+             (fn [c jg]
+               (let [key (.getCollapserKey c)]
+                 (doto jg
+                   (.writeStartObject)
+                   (.writeStringField "type" "HystrixCollapser")
+                   (.writeNumberField "currentTime" (System/currentTimeMillis))
+                   (.writeNumberField "rollingCountRequestsBatched" (.getRollingCount c (HystrixRollingNumberEvent/COLLAPSER_REQUEST_BATCHED)))
+                   (.writeNumberField "rollingCountBatches" (.getRollingCount c (HystrixRollingNumberEvent/COLLAPSER_BATCH)))
+                   (.writeNumberField "rollingCountResponsesFromCache" (.getRollingCount c (HystrixRollingNumberEvent/RESPONSE_FROM_CACHE)))
+
+                   (.writeNumberField "batchSize_mean" (.getBatchSizeMean c))
+                   (.writeObjectFieldStart "batchSize")
+                   (.writeNumberField "25" (.getBatchSizePercentile c  25))
+                   (.writeNumberField "50", (.getBatchSizePercentile c 50))
+                   (.writeNumberField "75", (.getBatchSizePercentile c 75))
+                   (.writeNumberField "90", (.getBatchSizePercentile c 90))
+                   (.writeNumberField "95", (.getBatchSizePercentile c 95))
+                   (.writeNumberField "99", (.getBatchSizePercentile c 99))
+                   (.writeNumberField "99.5", (.getBatchSizePercentile c 99.5))
+                   (.writeNumberField "100", (.getBatchSizePercentile c 100))
+                   (.writeEndObject)
+                   (.writeBooleanField "propertyValue_requestCacheEnabled" (-> c
+                                                                               (.getProperties)
+                                                                               (.requestCacheEnabled)
+                                                                               (.get)))
+                   (.writeNumberField "propertyValue_maxRequestsInBatch"  (-> c
+                                                                              (.getProperties)
+                                                                              (.maxRequestsInBatch)
+                                                                              (.get)))
+                   (.writeNumberField "propertyValue_timerDelayInMilliseconds" (-> c
+                                                                                   (.getProperties)
+                                                                                   (.timerDelayInMilliseconds)
+                                                                                   (.get)))
+                   (.writeNumberField "reportingHosts" 1)
+                   (.writeEndObject)))))
+
 ;; convenience functions
 (defn cmd->json
   "Convert a Hystrix command object to it's JSON representation"
   [cmd]
   (encode cmd))
+
+(defn threadpool->json
+  "Convert a Hystrix thread pool object to it's JSON representation"
+  [tp]
+  (encode tp))
+
+(defn collapser->json
+  "Convert a Hystrix collapser object to it's JSON representation"
+  [cpr]
+  (encode cpr))
+
+(defn command-metrics
+  []
+  (map encode (metrics/command-metrics)))
+
+(defn threadpool-metrics
+  []
+  (map encode (metrics/threadpool-metrics)))
+
+(defn collapser-metrics
+  []
+  (map encode (metrics/collapser-metrics)))
+
