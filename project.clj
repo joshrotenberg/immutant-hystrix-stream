@@ -1,6 +1,6 @@
 (defproject immutant-hystrix-stream "0.1.0-SNAPSHOT"
-  :description "FIXME: write description"
-  :url "http://example.com/FIXME"
+  :description "Expose a metrics event/text-stream for consumption by the Hystrix Dashboard in Immutant apps"
+  :url "https://github.com/joshrotenberg/immutant-hystrix-stream"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :profiles {:test
