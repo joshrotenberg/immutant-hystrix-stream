@@ -8,5 +8,5 @@
                  [org.immutant/immutant "2.1.0"]
                  [compojure "1.3.4"]
                  [ring/ring-devel "1.3.1"]
-                 [immutant-hystrix-stream "0.1.0-SNAPSHOT"]
+                 [immutant-hystrix-stream "0.1.0"]
                  [com.netflix.hystrix/hystrix-clj "1.4.14"]])
