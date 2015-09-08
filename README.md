@@ -36,8 +36,42 @@ If you are, however, this will let you create a stream of Hystrix
 metrics (presumably from your
 [Hystrix-clj](https://github.com/Netflix/Hystrix/tree/master/hystrix-contrib/hystrix-clj)
 commands) for consumption by the [Hystrix
-Dashboard](https://github.com/Netflix/Hystrix/tree/master/hystrix-dashboard). See the [example](https://github.com/joshrotenberg/immutant-hystrix-stream/tree/master/example) application for a quick usage overview.
+Dashboard](https://github.com/Netflix/Hystrix/tree/master/hystrix-dashboard).
 
+See the [example](https://github.com/joshrotenberg/immutant-hystrix-stream/tree/master/example) application for a quick usage overview.
+
+## Quickstart
+
+The best way to get an idea of whats going on is to take a look at the
+following code, and then hook it up to the Hystrix Dashboard and check
+out all the eye candy. Follow these steps:
+
+```
+# Run the example app
+cd immutant-hystrix-stream/example
+lein run
+
+# In another shell, install wildfly and the dashboard
+WILDFLY_VERSION=9.0.1.Final
+HYSTRIX_VERSION=1.4.14
+
+# Install WildFly
+wget http://download.jboss.org/wildfly/$WILDFLY_VERSION/wildfly-$WILDFLY_VERSION.zip
+unzip wildfly-$WILDFLY_VERSION.zip
+
+# Download/Install the Hystrix Dashboard
+cd wildfly-$WILDFLY_VERSION/standalone/deployments/
+wget http://repo2.maven.org/maven2/com/netflix/hystrix/hystrix-dashboard/$HYSTRIX_VERSION/hystrix-dashboard-$HYSTRIX_VERSION.war
+cd -
+
+# Start Wildfly
+wildfly-$WILDFLY_VERSION/bin/standalone.sh
+
+# In your browser, navigate to http://localhost:8080/hystrix-dashboard-$HYSTRIX_VERSION 
+# and enter the url of your running apps hystrix stream: http://localhost:8082/hystrix-stream and click Monitor Stream
+# Use another browser tab or curl to request the counter entry point a few times: curl http://localhost:8081/counter
+
+```
 
 ## License
 
