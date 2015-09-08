@@ -82,5 +82,5 @@
                (immutant.web.middleware/wrap-session {:timeout 20}))
     (merge {:host "localhost" :port 8081}))
   ;; and run our hystrix metrics stream on a separate port (you don' have to do this, i guess). hs/hystrix-stream is just a normal ring handler func
-  ;; and should work like any other that you'd use. curl http://localhost:8082/hystrix-stream 
+  ;; and should work like any other that you'd use. curl http://localhost:8082/hystrix-stream , or point your hystrix dashboard at it 
   (web/run hs/hystrix-stream :host "localhost" :port 8082 :path "/hystrix-stream"))
