@@ -1,7 +1,6 @@
 (ns immutant-hystrix-stream.stream
   (:require [immutant-hystrix-stream.metrics :as metrics]
             [immutant-hystrix-stream.json :refer :all])
-  (:require [clojure.core.async :as async])
   (:require [cheshire.core :as json])
   (:require [immutant.web.sse :refer [as-channel send! Event]]))
 

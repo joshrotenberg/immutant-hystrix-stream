@@ -1,5 +1,11 @@
 # immutant-hystrix-stream
 
+[![Build Status](https://travis-ci.org/joshrotenberg/immutant-hystrix-stream.svg)](https://travis-ci.org/joshrotenberg/immutant-hystrix-stream)
+
+[![Coverage Status](https://coveralls.io/repos/joshrotenberg/immutant-hystrix-stream/badge.svg?branch=master&service=github)](https://coveralls.io/github/joshrotenberg/immutant-hystrix-stream?branch=master)
+
+[![Clojars Project](http://clojars.org/immutant-hystrix-stream/latest-version.svg)]
+
 Clojure stuff for encoding [Hystrix](https://github.com/Netflix/Hystrix) commands and providing
 a data stream via SSE in [Immutant](http://immutant.org) applications.
 
@@ -30,8 +36,7 @@ If you are, however, this will let you create a stream of Hystrix
 metrics (presumably from your
 [Hystrix-clj](https://github.com/Netflix/Hystrix/tree/master/hystrix-contrib/hystrix-clj)
 commands) for consumption by the [Hystrix
-Dashboard](https://github.com/Netflix/Hystrix/tree/master/hystrix-dashboard).
-
+Dashboard](https://github.com/Netflix/Hystrix/tree/master/hystrix-dashboard). See the [example](https://github.com/joshrotenberg/immutant-hystrix-stream/tree/master/example) application for a quick usage overview.
 
 
 ## License
