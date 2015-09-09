@@ -4,6 +4,8 @@
 
 [![Coverage Status](https://coveralls.io/repos/joshrotenberg/immutant-hystrix-stream/badge.svg?branch=master&service=github)](https://coveralls.io/github/joshrotenberg/immutant-hystrix-stream?branch=master)
 
+[![Clojars Project](http://clojars.org/immutant-hystrix-stream/latest-version.svg)](http://clojars.org/immutant-hystrix-stream)
+
 Leiningen:
 ```
 [immutant-hystrix-stream "0.1.0"]
