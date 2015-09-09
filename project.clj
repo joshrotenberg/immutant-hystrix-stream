@@ -4,7 +4,8 @@
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :profiles {:dev
-             {:dependencies [[com.netflix.hystrix/hystrix-clj "1.4.14"]]
+             {:dependencies [[com.netflix.hystrix/hystrix-clj "1.4.14"]
+                             [clj-http "0.9.1"]]
               :plugins [[lein-cloverage "1.0.6"]]}}
   :dependencies [[org.clojure/clojure "1.7.0"]
                  [org.immutant/web "2.0.2"]
